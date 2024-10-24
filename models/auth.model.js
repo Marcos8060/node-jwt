@@ -18,19 +18,28 @@ const sequelize = new Sequelize(
 const User = sequelize.define(
     "User",
     {
-        username: {
+        name: {
             type: DataTypes.STRING,
             unique: true,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                len: [4, 20]
+            }
         },
         email: {
             type: DataTypes.STRING,
             unique: true,
-            allowNull: false
+            allowNull: false,
+            validate:{
+                len: [4, 20]
+            }
         },
         password: {
             type: DataTypes.STRING,
-            allowNull: false
+            allowNull: false,
+            validate: {
+                len: [6, 1024]
+            }
         }
     },
     {

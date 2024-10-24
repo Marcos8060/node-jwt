@@ -35,9 +35,11 @@ app.use(express.urlencoded({ extended: false }));
 
 // Import Routes
 const authRoute = require("./routes/auth.routes");
+const postRoute = require('./routes/posts');
 
 // route middleware
 app.use("/api/user", authRoute);
+app.use("/api/posts", postRoute);
 
 
 

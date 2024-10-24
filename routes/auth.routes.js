@@ -1,17 +1,13 @@
 const router = require("express").Router();
 const User = require("../models/auth.model");
-const Joi = require("joi");
+const { RegisterValidation } = require('../validation')
 
 // Define validation schema
-const schema = Joi.object({
-  name: Joi.string().min(4).max(20).required(),
-  email: Joi.string().email().required(),
-  password: Joi.string().min(6).required(),
-});
+
 
 router.post("/register", async (req, res) => {
   // Validate data before processing
-  const { error } = schema.validate(req.body); // Use schema.validate
+  const { error } = RegisterValidation(req.body)
   // If validation fails, return an error response
   if (error) {
     return res.status(400).json({ message: error.details[0].message });

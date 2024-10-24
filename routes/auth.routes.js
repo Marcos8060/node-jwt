@@ -2,6 +2,10 @@ const router = require("express").Router();
 const User = require("../models/auth.model");
 const { RegisterValidation, LoginValidation } = require("../validation");
 const bcrypt = require("bcrypt");
+const jwt = require("jsonwebtoken");
+const dotenv = require("dotenv");
+
+dotenv.config();
 
 // REGISTER
 router.post("/register", async (req, res) => {
@@ -48,7 +52,7 @@ router.post("/login", async (req, res) => {
   //   check if email already registered
   const user = await User.findOne({ where: { email: req.body.email } });
   if (!user) {
-    return res.status(400).json({ message: "Email not found" }); 
+    return res.status(400).json({ message: "Email not found" });
   }
 
   // validate password
@@ -56,6 +60,18 @@ router.post("/login", async (req, res) => {
   if (!validPassword) {
     return res.status(400).json({ message: "Invalid password" });
   }
-  res.json({ message: "Login successful", user: { id: user.id, name: user.name, email: user.email } });
+
+  //   create and assign a token to the user
+  const token = jwt.sign(
+    {
+      id: user.id,
+      email: user.email,
+      name: user.name,
+    },
+    process.env.TOKEN_SECRET
+  );
+
+  res.header("access_token", token).send(token);
+  //   res.json({ message: "Login successful", user: { id: user.id, name: user.name, email: user.email } });
 });
 module.exports = router;
